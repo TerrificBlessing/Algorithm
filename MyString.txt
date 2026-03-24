@@ -1,0 +1,73 @@
+//补足MyString类，使程序输出指定结果
+#include <iostream>
+#include <string>
+#include <cstring>
+using namespace std;
+class MyString {
+    char * p;
+public:
+    MyString(const char * s) //构造函数 
+	{
+        if( s) {
+            p = new char[strlen(s) + 1];
+            strcpy(p,s);
+        }
+        else
+            p = NULL;
+
+    }
+    ~MyString() { if(p) delete [] p; } //析构函数 
+// 在此处补充你的代码
+	void Copy(const char *x) 
+	{
+		if(x){
+		
+		p = new char[strlen(x)+1];
+		strcpy(p,x);}
+		else p=NULL;
+	 } 
+	friend ostream & operator << (ostream & ,MyString & );
+	
+	MyString(MyString &a) //复制函数 
+	{
+		if(a.p){
+		
+		p=new char[strlen(a.p)+1];	
+		strcpy(p,a.p);
+	}
+		else p=NULL;
+	}
+	MyString &operator = (const MyString & b) 	 //=重载函数 
+	{
+		if(p) delete [] p;
+		if(b.p)
+		{
+			p=new char[strlen(b.p)+1];
+			strcpy(p,b.p);
+		}
+		else p=NULL;
+	}
+	};
+	ostream & operator << (ostream & output ,MyString & x) //<<重载函数 
+	{
+		output<<x.p;
+		return output;
+	}
+	
+int main()
+{
+    char w1[200],w2[100];
+    while( cin>>w1>>w2 ) {
+    	
+        MyString s1(w1),s2 = s1;
+        MyString s3(NULL);
+        s3.Copy(w1);
+        cout << s1 << "," << s2 << "," << s3 << endl;
+		s2 = w2;
+        s3 = s2;
+        s1 = s3;
+        cout << s1 << "," << s2 << "," << s3 << endl;
+        
+    }
+}
+

@@ -1,0 +1,65 @@
+#include<iostream>
+using namespace std;
+const int INF = 100000;
+int a[10];
+void Merge(int p,int q,int r)
+{
+	int n1 = q - p + 1;
+	int n2 = r - q;
+	int* L = new int [n1+1];
+	int* R = new int [n2 + 1];
+	for (int i = 1; i <= n1; ++i)
+	{
+		*(L + i) = a[p + i - 1];
+
+	}
+	for (int i = 1; i <= n2; ++i)
+	{
+		*(R + i) = a[q + i];
+	}
+	*(L + n1 + 1) =*(R+n2+1)= INF;
+
+	int i = 1, j = 1;
+	for (int k = p; k <= r; ++k)
+	{
+		
+		if (*(L + i) < *(R + j))
+		{
+			a[k] = *(L + i);
+			++i;
+
+		}
+		else
+		{
+			a[k] = *(R + j);
+			++j;
+		}
+	}
+	
+	
+}
+void Merge_sort(int p,int r)
+{
+	if (p < r)
+	{
+		int q = (p + r) / 2;
+		Merge_sort(p, q);
+		Merge_sort(q + 1, r);
+		Merge(p, q, r);
+	}
+}
+int main()
+{
+	
+	for (int i = 0; i <= 9; ++i)
+	{
+		cin >> a[i];
+
+	}
+	Merge_sort(0, 9);
+	for (int i = 0; i <= 9; ++i)
+	{
+		cout << a[i] << " ";
+	}
+	return 0;
+}

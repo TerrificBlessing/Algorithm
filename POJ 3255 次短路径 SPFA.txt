@@ -1,0 +1,104 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <limits.h>
+#include <queue>
+#include <map>
+using namespace std;
+
+const int V = 5000 + 10;
+
+int dist1[V];
+int dist2[V];
+
+struct Node
+{
+	Node(int a, int b): to(a), cost(b) {}
+	int to, cost;
+};
+map<int, vector<Node>> G;
+
+int main()
+{
+	int N, R;
+	cin >> N >> R;
+	
+	for (int i = 0; i < R; ++i)
+	{
+		int u, v, w;
+		cin >> u >> v >> w;
+		G[u].push_back(Node(v, w));
+		G[v].push_back(Node(u, w));
+
+	}
+
+	memset(dist1, -1, sizeof dist1);
+	memset(dist2, -1, sizeof dist2);
+
+	dist1[1] = 0;
+
+	queue<int> que;
+	que.push(1);
+	while (que.size())
+	{
+		int u = que.front();
+		que.pop();
+		for (vector<Node>::iterator it = G[u].begin(); it != G[u].end(); ++it)
+		{
+			
+			int v = it->to;
+			int c = it->cost;
+			
+			if (dist1[u] == -1) continue;
+			if (dist1[v] > dist1[u] + c || dist1[v] == -1)
+			{
+				dist1[v] = dist1[u] + c;
+				que.push(v);
+			}
+
+			if (dist2[v] == -1 && dist2[u] == -1)
+			{
+				if (dist1[u] + c == dist1[v]) continue;
+				else {
+					dist2[v] = dist1[u] + c;
+					que.push(v);
+					continue;
+				}
+			}
+			if (dist2[v] == -1 && dist2[u] != -1)
+			{
+				if (dist1[u] + c == dist1[v]) 
+				{
+					dist2[v] = dist2[u] + c;
+					que.push(v);
+					continue;
+				}
+				dist2[v] = dist1[u] + c;
+				que.push(v);
+				continue;
+			}
+			if (dist2[u] == -1) continue;
+			if (dist2[v] <= dist1[u] + c)
+			{
+				continue;
+			}
+			else
+			{
+				if (dist1[u] + c == dist1[v])
+				{
+					if (dist2[v] <= dist2[u] + c) continue;
+					dist2[v] = dist2[u] + c;
+					que.push(v);
+					continue;
+				} 
+				dist2[v] = dist1[u] + c;
+				que.push(v);
+			}
+			
+		}
+	}
+
+	cout << dist2[N] << endl;
+
+	return 0;
+}

@@ -1,0 +1,61 @@
+核心：void add(int k, int x1, int y1, int x2, int y2)
+{
+    dif[x1][y1] += k;
+    dif[x1][y2 + 1] -= k;
+    dif[x2 + 1][y1] -= k;
+    dif[x2 + 1][y2 + 1] += k;
+    
+}
+
+arr[i][j] = arr[i - 1][j] + arr[i][j - 1] + dif[i][j] - arr[i - 1][j - 1]; //原数组是差分数组的前缀和，这其实就是前缀和公式
+
+************************************************
+
+
+
+#include <iostream>
+#include <cstdio>
+using namespace std;
+const int N = 1000 + 10;
+int arr[N][N];
+int dif[N][N];
+int n, m;
+void add(int k, int x1, int y1, int x2, int y2)
+{
+    dif[x1][y1] += k;
+    dif[x1][y2 + 1] -= k;
+    dif[x2 + 1][y1] -= k;
+    dif[x2 + 1][y2 + 1] += k;
+    
+}
+int main()
+{
+    int q;
+    scanf("%d%d%d", &n, &m, &q);
+    for(int i = 1; i <= n; ++i)
+        for(int j = 1; j <= m; ++ j)
+        {
+            int k;
+            scanf("%d", &k);
+            add(k, i, j, i, j);
+        }
+        
+    for(int i = 1; i <= q; ++ i)
+    {
+        int x1, y1, x2, y2, c;
+        scanf("%d%d%d%d%d", &x1, &y1, &x2, &y2, &c);
+        add(c, x1, y1, x2, y2);
+    }
+    
+    for(int i = 1; i <= n; ++ i)
+    {
+        for(int j = 1; j <= m; ++ j)
+        {
+            arr[i][j] = arr[i - 1][j] + arr[i][j - 1] + dif[i][j] - arr[i - 1][j - 1];
+            printf("%d ", arr[i][j]);
+        }
+        puts("");
+    }
+    
+    return 0;
+}

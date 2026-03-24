@@ -1,0 +1,76 @@
+#include<iostream>
+using namespace std;
+#include<algorithm>
+struct node
+{
+	int w;
+	int s;
+	int m;
+	node* p;
+}n[10001];
+int N=0;
+int i = 1;
+int dp[10001];
+int pos=1;
+bool cmp(node &n1,node &n2)
+{
+	if (n1.w == n2.w)
+		return n1.s > n2.s;
+	else 
+		return n1.w < n2.w;
+}
+void output(node* p1)
+{
+	if (p1 == 0) return;
+	output(p1->p);
+	cout << p1->m << endl;
+	
+}
+int main()
+{
+	
+	while (cin >> n[i].w >> n[i].s)
+	{
+		n[i].m = i;
+		++i;
+
+	}
+	--i;
+	N = i;
+	
+	sort(n+1, n + N+1, cmp);
+	for (int j = 1; j <= N; ++j)
+	{
+		dp[j] = 1;
+		n[j].p = 0;
+		for (int k = 1; k < j; ++k)
+		{
+			if (n[k].s > n[j].s && n[k].w < n[j].w)
+			{
+				if (dp[k] + 1 > dp[j])
+				{
+					dp[j] = dp[k] + 1;
+					n[j].p = &n[k];
+				}
+				
+			}
+				
+			
+		}
+	}
+
+	int ma = dp[1];
+	for (int j = 2; j <= N; ++j)
+	{
+		if (dp[j] > ma)
+		{
+			ma = dp[j];
+			pos = j;
+		}
+		
+	}
+	cout << dp[pos] << endl;
+	output(&n[pos]);
+	return 0;
+
+}

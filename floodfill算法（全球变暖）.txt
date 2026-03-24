@@ -1,0 +1,79 @@
+#include <iostream>
+#include <queue>
+#include <cstdio>
+
+using namespace std;
+typedef pair<int, int> PII;
+#define x first
+#define y second
+int res = 0;
+const int N = 1010;
+int n;
+char g[N][N];
+bool st[N][N];
+int dx[4] = {-1, 0, 1, 0};
+int dy[4] = {0, -1, 0, 1};
+
+void bfs(int sx, int sy, int& num, int& bound)
+{
+    queue<PII> que;
+    que.push({sx, sy});
+    st[sx][sy] = true;
+
+    while(que.size())
+    {
+        auto t = que.front();
+        que.pop();
+        num ++ ;
+        bool is_bound = false;
+
+        for(int i = 0; i < 4; ++ i)
+        {
+
+            int mx = t.x + dx[i], my = t.y + dy[i];
+            if(mx < 0 || mx >= n || my < 0 || my >= n) continue;
+            if(st[mx][my]) continue;
+            if(g[mx][my] == '.')
+            {
+                is_bound = true;
+                continue;
+            }
+
+            que.push({mx, my});
+            st[mx][my] = true;
+
+        }
+
+        if(is_bound) bound ++;
+
+    }
+}
+
+
+int main()
+{
+    scanf("%d", &n);
+
+    for(int i = 0; i < n; ++ i)
+    {
+        scanf("%s", g[i]);
+
+    }
+
+    for(int i = 1; i < n - 1; ++ i)
+        for(int j = 1; j < n - 1; ++ j)
+        {
+            if(!st[i][j] && g[i][j] == '#')
+            {
+                int num = 0, bound = 0;
+                bfs(i, j, num, bound);
+                if(num == bound) res ++;
+
+            }
+        }
+
+    printf("%d\n", res);
+
+    return 0;
+}
+

@@ -1,0 +1,61 @@
+priority_queue<Type, Container, Functional>
+
+Type为数据类型， Container为保存数据的容器，Functional为元素比较方式。
+
+如果不写后两个参数，那么容器默认用的是vector，比较方式默认用operator<，也就是优先队列是大顶堆，队头元素最大。
+
+#include<cstdio>
+#include<queue>
+#include<iostream>
+using namespace std;
+struct two
+{
+	int a;
+	int b;
+}c[10002];
+int main()
+{
+	bool cmp(two c1, two c2);
+	priority_queue<int> pque;
+	int N, P, L;
+	cin >> N;
+	int k = 0;
+	
+	for (int i = 1; i <= N ; i++)
+	{
+		cin >> c[i].a >> c[i].b;
+	}
+
+	cin >> L >> P;
+	c[0].a = L;
+	c[0].b = 0;
+	c[N + 1].a = 0;
+	c[N + 1].b = 0;
+	sort(c + 1, c + N + 1, cmp);
+	int j = 0;
+	for (int i = 0; i <= N; i++)
+	{
+		P -= c[i].a - c[i+1].a;
+		pque.push(c[i].b);
+		
+		while (P < 0)
+			{
+			if (pque.empty())
+			{
+					puts("-1");
+					return 0;
+			}
+				P += pque.top();
+				pque.pop();
+				j++;
+			}
+		
+	}
+	cout << j;
+
+	return 0;
+}
+bool cmp(two c1, two c2)
+{
+	return (c1.a > c2.a);
+}

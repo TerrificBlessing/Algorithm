@@ -1,0 +1,115 @@
+#include<iostream>
+using namespace std;
+#include<queue>
+const int INF = 99999999;
+int dx[4] = { -1,0,1,0 };
+int dy[4] = { 0,-1,0,1 };
+class node
+{
+public:
+	node()
+	{
+		x = 0; y = 0; step = 0;
+	}
+	node(int a, int b, int c)
+	{
+		x = a;
+		y = b;
+		step = c;
+	}
+	int x;
+	int y;
+	int step;
+}w;
+struct fri
+{
+	int x;
+	int y;
+};
+
+char wfs[201][201];
+char wfs2[201][201];
+int N, M;
+int nf;
+fri f[1001];
+int fx, fy;
+int ans = INF;
+int x, y;
+bool operator < (const node& a, const node& b)
+{
+	return a.step > b.step;
+}
+int fwfs()
+{
+	ans = INF;
+	for (int g = 1; g <= nf; ++g)
+	{
+		for (int i = 1; i <= N; ++i)
+			for (int j = 1; j <= M; ++j)
+				wfs2[i][j] = wfs[i][j];
+		priority_queue<node>que;
+		que.push(node(f[g].x, f[g].y, 0));
+		while (que.size())
+		{
+			w = que.top();
+			if (w.x == fx && w.y == fy)
+			{
+				ans = min(ans, w.step );
+				break;
+			}
+			que.pop();
+			for (int i = 0; i < 4; ++i)
+			{
+				x = w.x + dx[i];
+				y = w.y + dy[i];
+				if (x >= 1 && x <= N && y >= 1 && y <= M)
+				{
+					if (wfs2[x][y] == 'x')
+						que.push(node(x, y, w.step + 2));
+					else
+					{
+						if (wfs2[x][y] == '.'||wfs2[x][y]=='a')
+							que.push(node(x, y, w.step + 1));
+					}
+
+					wfs2[x][y] = '#';
+
+				}
+
+
+
+			}
+
+		}
+
+	}
+	return ans;
+}
+int main()
+{
+	while (cin >> N >> M)
+	{
+		nf = 0;
+		for (int i = 1; i <= N; ++i)
+			for (int j = 1; j <= M; ++j)
+			{
+				cin >> wfs[i][j];
+				if (wfs[i][j] == 'a')
+				{
+					fx = i;
+					fy = j;
+				}
+				if (wfs[i][j] == 'r')
+				{
+					++nf;
+					f[nf].x = i;
+					f[nf].y = j;
+				}
+
+			}
+		if (fwfs() == INF) cout << "Poor ANGEL has to stay in the prison all his life." << endl;
+		else cout << fwfs() << endl;
+
+	}
+	return 0;
+}

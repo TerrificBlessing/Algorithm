@@ -1,0 +1,27 @@
+#include <iostream>
+#include <cstdio>
+
+using namespace std;
+
+int quick_pow(int a, int b)
+{
+	int res = 1;
+	while (b)
+	{
+		if(b & 1) res *= a;
+		b >>= 1;
+		a *= a;
+		
+	}
+	return res;
+}
+
+int main()
+{
+	int x, y;
+	cin >> x >> y;
+	cout << quick_pow(x, y) << endl;
+	
+	
+	return 0;
+}

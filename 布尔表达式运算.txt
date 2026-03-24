@@ -1,0 +1,256 @@
+#include<iostream>
+using namespace std;
+#include<stdio.h>
+#include<stack>
+#include<string>
+stack<char> sk1;
+stack<char> sk2;
+char f_and (char a, char b)
+{
+	if (a == 'V' && b == 'V')
+		return 'V';
+	else return 'F';
+
+}
+char f_or(char a, char b)
+{
+	if (a == 'F' && b == 'F')
+		return 'F';
+	else return 'V';
+
+}
+char f_not(char a)
+{
+	if (a == 'V') return 'F';
+	else return 'V';
+}
+
+int main()
+{
+	char c;
+	
+	int sum = 0;
+	
+	while ((c=getchar()) != EOF)
+	{
+		
+	
+
+			
+			
+			if (c != '\n')
+			{
+
+				if (c == ' ')
+				{
+					
+					continue;
+				}
+				if (c == 'V' || c == 'F')
+				{
+					sk2.push(c);
+					if (sk1.size() != 0)
+					{
+						char c1 = sk1.top();
+						while (c1 == '!')
+						{
+							sk2.pop();
+							sk2.push(f_not(c));
+							sk1.pop();
+							if (sk1.size() != 0)
+							{
+								c1 = sk1.top();
+							}
+							else
+							{
+								break;
+							}
+
+						}
+					}
+				}
+				if (c == '&')
+				{
+					if (sk1.size() != 0)
+					{
+						char c1 = sk1.top();
+						if (c1 == '&')
+						{
+							sk1.pop();
+							char a = sk2.top();
+							sk2.pop();
+							char b = sk2.top();
+							sk2.pop();
+							sk2.push(f_and(a, b));
+							sk1.push('&');
+						}
+						if (c1 == '|')
+						{
+							sk1.push('&');
+						}
+						if (c1 == '(')
+						{
+							sk1.push('&');
+						}
+					}
+					else
+					{
+						sk1.push('&');
+					}
+				}
+				if (c == '|')
+				{
+					if (sk1.size() != 0)
+					{
+						char c1 = sk1.top();
+						if (c1 == '&')
+						{
+							sk1.pop();
+							char a = sk2.top();
+							sk2.pop();
+							char b = sk2.top();
+							sk2.pop();
+							sk2.push(f_and(a, b));
+							sk1.push('|');
+						}
+						if (c1 == '|')
+						{
+							sk1.pop();
+							char a = sk2.top();
+							sk2.pop();
+							char b = sk2.top();
+							sk2.pop();
+							sk2.push(f_or(a, b));
+							sk1.push('|');
+						}
+						if (c1 == '(')
+						{
+							sk1.push('|');
+						}
+
+					}
+					else
+					{
+						sk1.push('|');
+					}
+				}
+				if (c == '(')
+				{
+					sk1.push('(');
+				}
+				if (c == ')')
+				{
+					char c1 = sk1.top();
+					while (c1 != '(')
+					{
+
+						if (c1 == '&')
+						{
+							sk1.pop();
+							char a = sk2.top();
+							sk2.pop();
+							char b = sk2.top();
+							sk2.pop();
+							sk2.push(f_and(a, b));
+
+						}
+						if (c1 == '|')
+						{
+							sk1.pop();
+							char a = sk2.top();
+							sk2.pop();
+							char b = sk2.top();
+							sk2.pop();
+							sk2.push(f_or(a, b));
+						}
+						c1 = sk1.top();
+					}
+					sk1.pop();
+					if (sk1.size() != 0)
+					{
+						c1 = sk1.top();
+
+						while (c1 == '!')
+						{
+							sk1.pop();
+							char a = sk2.top();
+							sk2.pop();
+							sk2.push(f_not(a));
+							if (sk1.size() != 0)
+							{
+								c1 = sk1.top();
+							}
+							else
+							{
+								break;
+							}
+						}
+					}
+					else
+					{
+
+					}
+				}
+				if (c == '!')
+				{
+					sk1.push('!');
+				}
+				
+			}
+			if (c == '\n')
+			{
+				++sum;
+				if (sk1.size() == 0)
+				{
+					cout << "Expression " << sum << ": " << sk2.top() << endl;
+					sk2.pop();
+				}
+				else
+				{
+					char c1 = sk1.top();
+					while (sk1.size() != 0)
+					{
+
+						if (c1 == '&')
+						{
+							sk1.pop();
+							char a = sk2.top();
+							sk2.pop();
+							char b = sk2.top();
+							sk2.pop();
+							sk2.push(f_and(a, b));
+
+						}
+						if (c1 == '|')
+						{
+							sk1.pop();
+							char a = sk2.top();
+							sk2.pop();
+							char b = sk2.top();
+							sk2.pop();
+							sk2.push(f_or(a, b));
+						}
+						if (c1 == '!')
+						{
+							char a = sk2.top();
+							sk2.pop();
+							sk1.pop();
+							sk2.push(f_not(a));
+						}
+						if (sk1.size() != 0)
+						{
+							c1 = sk1.top();
+						}
+					}
+					cout << "Expression " << sum << ": " << sk2.top() << endl;
+					sk2.pop();
+				}
+			}
+
+
+
+		
+	}
+	return 0;
+
+}

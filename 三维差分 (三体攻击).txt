@@ -1,0 +1,108 @@
+核心：void Add(int k, int x1, int y1, int z1, int x2, int y2, int z2)
+{   
+    dif[get(z1,     x1,     y1)]     += k;
+    dif[get(z1,     x1,     y2 + 1)] -= k;
+    dif[get(z1,     x2 + 1, y1)]     -= k;
+    dif[get(z1,     x2 + 1, y2 + 1)] += k;
+    dif[get(z2 + 1, x1,     y1)]     -= k;
+    dif[get(z2 + 1, x1,     y2 + 1)] += k;
+    dif[get(z2 + 1, x2 + 1, y1)]     += k;
+    dif[get(z2 + 1, x2 + 1, y2 + 1)] -= k;
+    
+}
+
+arr[get(i, j, k)] = arr[get(i - 1, j - 1, k - 1)] - arr[get(i - 1, j, k - 1)]\
+                - arr[get(i - 1, j - 1, k)] - arr[get(i, j - 1, k - 1)] + arr[get(i, j - 1, k)]\
+                + arr[get(i - 1, j, k)] + arr[get(i, j, k - 1)] + dif[get(i, j, k)];                          
+
+
+————————————————————————
+
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+int A, B, C, m;
+typedef long long LL;
+const int N = 2000000 + 10;
+int arr[N];
+LL dif[N], bp[N];
+int op[N/2][7];
+
+int get(int i, int j, int k)
+{
+    return i * B * C + j * C + k;
+}
+
+void Add(int k, int x1, int y1, int z1, int x2, int y2, int z2)
+{   
+    dif[get(z1,     x1,     y1)]     += k;
+    dif[get(z1,     x1,     y2 + 1)] -= k;
+    dif[get(z1,     x2 + 1, y1)]     -= k;
+    dif[get(z1,     x2 + 1, y2 + 1)] += k;
+    dif[get(z2 + 1, x1,     y1)]     -= k;
+    dif[get(z2 + 1, x1,     y2 + 1)] += k;
+    dif[get(z2 + 1, x2 + 1, y1)]     += k;
+    dif[get(z2 + 1, x2 + 1, y2 + 1)] -= k;
+    
+}
+
+bool check(int round)
+{
+    memcpy(dif, bp, sizeof dif); //每一次check用初始差分数组开始
+    memset(arr, 0, sizeof arr);
+    for(int i = 1; i <= round; ++ i)
+    {
+        Add(-op[i][6], op[i][2], op[i][4], op[i][0], op[i][3], op[i][5], op[i][1]);
+    }
+    
+    for(int i = 1; i <= A; ++ i)
+        for(int j = 1; j <= B; ++ j)
+            for(int k = 1; k <= C; ++ k)
+            { 
+                arr[get(i, j, k)] = arr[get(i - 1, j - 1, k - 1)] - arr[get(i - 1, j, k - 1)]\
+                - arr[get(i - 1, j - 1, k)] - arr[get(i, j - 1, k - 1)] + arr[get(i, j - 1, k)]\
+                + arr[get(i - 1, j, k)] + arr[get(i, j, k - 1)] + dif[get(i, j, k)];                                                               
+                if(arr[get(i, j, k)] < 0) return true;
+            }
+    return false;
+}
+
+int main()
+{
+
+    scanf("%d%d%d%d", &A, &B, &C, &m);
+    
+    for(int i = 1; i <= A; ++ i)
+        for(int j = 1; j <= B; ++ j)
+            for(int k = 1; k <= C; ++ k)
+            {
+                int val;
+                scanf("%d", &val);
+                Add(val, j, k, i, j, k, i);
+            }
+    
+    
+    for(int i = 1; i <= m; ++ i)
+        for(int j = 0; j < 7; ++ j)
+            scanf("%d", &op[i][j]);
+    
+    memcpy(bp, dif, sizeof bp); //把初始差分数组存起来
+            
+    int l = 1, r = m;
+    while(l < r)
+    {
+        int mid = l + r >> 1;
+        if(check(mid)) r = mid;
+        else l = mid + 1;
+        
+    }
+    
+    printf("%d", r);
+    puts("");
+    
+    return 0;
+            
+}

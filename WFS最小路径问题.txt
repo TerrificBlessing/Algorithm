@@ -1,0 +1,154 @@
+骑士问题：
+#include<iostream>
+#include<queue>
+using namespace std;
+class Node
+{
+public:
+	Node():x(0),y(0),step(0) {}
+	Node(int a,int b,int c):x(a),y(b),step(c){}
+	int x;
+	int y;
+	int step;
+}N;
+int wfs[10][10];
+int dx[8] = { -2,-1,1,2,2,1,-1,-2 };
+int dy[8] = { 1,2,2,1,-1,-2,-2,-1 };
+queue <Node> que;
+char c1[3];
+char c2[3];
+
+void fwfs()
+{
+	while (cin >> c1 >> c2)
+	{
+		int sum = 0;
+		int ans = 1000000000;
+		int x1 = c1[0] - 'a' + 1, y1 = c1[1] - '0';
+		int x2 = c2[0] - 'a' + 1, y2 = c2[1] - '0';
+		if (x1 == x2 && y1 == y2)
+		{
+			ans = 0;
+
+		}
+		for (int i = 1; i <= 8; ++i)
+			for (int j = 1; j <= 8; ++j)
+				wfs[i][j] = 1;
+		
+		wfs[x2][y2] = 0;
+		que.push(Node(x1, y1,0));
+		while (que.size())
+		{
+			N = que.front();
+			que.pop();
+			
+			for(int i=0;i<=7;++i)
+			{
+			
+				int x3 =N.x + dx[i];
+				int y3 = N.y + dy[i];
+
+				if (x3 >= 1 && x3 <= 8 && y3 >= 1 && y3 <= 8 && wfs[x3][y3] != 0)
+				{
+					que.push(Node(x3, y3, N.step+1));
+					wfs[x3][y3] = 0;
+				}
+				if (x3 == x2 && y3 == y2)
+				{
+					ans = min(ans, N.step+1);
+				}
+			}
+		}
+		printf("To get from %s to %s takes %d knight moves.\n",c1,c2,ans);
+		
+	}
+
+}
+int main()
+{
+	fwfs();
+	return 0;
+}
+
+
+三维地牢问题：
+#include<iostream>
+#include<queue>
+using namespace std;
+char wfs[31][31][31];
+int L, R, C;
+const int INF = 10000000;
+
+int dx[6] = { 1,0,-1,0,0,0 };
+int dy[6] = { 0,1,0,-1,0,0 };
+int dz[6] = { 0,0,0,0,1,-1 };
+int ans;
+class Node
+{
+public:
+	Node()
+	{
+		x = y = z = step = 0;
+	}
+	Node(int a, int b, int c,int d) :x(a), y(b), z(c) ,step(d) {}
+	int x;
+	int y;
+	int z;
+	int step;
+}N;
+queue <Node> que;
+int fwfs(int x,int y,int z,int d)
+{
+	que.push(Node(x, y, z, d));
+	while (que.size())
+	{
+		N = que.front();
+		que.pop();
+		for (int i = 0; i < 6; ++i)
+		{
+			int nx = N.x + dx[i];
+			int ny = N.y + dy[i];
+			int nz = N.z + dz[i];
+			if (nx >= 1 && nx <= L && ny >= 1 && ny <= R && nz >= 1 && nz <= C && wfs[nx][ny][nz] == '.')
+			{
+				que.push(Node(nx, ny, nz, N.step + 1));
+				wfs[nx][ny][nz] = '#';
+			}
+			if (wfs[nx][ny][nz] == 'E')
+			{
+				ans = min(ans, N.step + 1);
+			}
+		}
+	}
+	return ans;
+
+}
+int main()
+{
+	
+	while (1)
+	{
+		ans = INF;
+		int sx, sy, sz;
+		cin >> L >> R >> C;
+		if (L == 0 && R == 0 && C == 0)
+			break;
+		for (int i = 1; i <= L; ++i)
+			for (int j = 1; j <= R; ++j)
+				for (int k = 1; k <= C; ++k)
+				{
+					cin >> wfs[i][j][k];
+					if (wfs[i][j][k] == 'S')
+					{
+						sx = i;
+						sy = j;
+						sz = k;
+					}
+				}
+
+		int gg = fwfs(sx,sy,sz,0);
+		if (gg == INF) cout << "Trapped!\n";
+		else printf("Escaped in %d minute(s).\n", gg);
+	}
+	return 0;
+}

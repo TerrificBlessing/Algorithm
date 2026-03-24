@@ -1,0 +1,56 @@
+#include<iostream>
+using namespace std;
+#include<cmath>
+struct Node
+{
+	int x;
+	Node* next;
+};
+Node* Create(int n)
+{
+	Node* p; int x;
+	if (n == 0) return 0;
+	p = new Node;
+	cin >> p->x;
+	p->next = Create(n - 1);
+	return p;
+}
+void output(Node* p)
+{
+	if (p == 0) return;
+	cout << p->x <<" ";
+	output(p->next);
+}
+Node* Search_end(Node* p)
+{
+	
+	if (p->next == 0) return p;
+	else return Search_end(p->next);
+}
+void Bubble(Node* head,Node* end)
+{
+	if (head == end) return;
+	Node *p,*q;
+	p = head;
+		q = p->next;
+		if ((p->x) > (q->x)) swap(p->x, q->x);
+		while (q != end)
+		{
+			p = q;
+			q = p->next;
+			if ((p->x) > (q->x)) swap(p->x, q->x);
+		
+		}
+	Bubble(head, p);
+}
+int main()
+{
+	int n;
+	cin >> n;
+	Node* head = Create(n);
+	Node* end;
+	end = Search_end(head);
+	Bubble(head, end);
+	output(head);
+	return 0;
+}

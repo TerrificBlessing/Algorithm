@@ -1,0 +1,52 @@
+const int Max
+class CHugeInt
+{
+	private:
+		char buf[Max];
+	public:
+		void reserve(char * p)
+		{
+			（倒序排序）
+		}
+		CHugeInt (char *p)
+		{
+			memset(buf,0,sizeof(buf);
+			strcpy(buf,p);
+			reserve(buf);
+		}
+		CHugeInt (int n)//将整型转为大整数类型
+		{
+			memset(buf,0,sizeof(buf);
+			sprintf(buf,"%d",n);
+			reserve(buf);
+		}
+};
+加法：
+CHugeInt operator + ( CHugeInt & h)
+{
+	CHugeInt tmp(0);
+	int carry=0;
+	for(int i=0;i<Max;++i)
+	{
+		char c1=buf[i];
+		char c2=h.buf[i];
+		if(c1==0&&c2==0&&carry==0)
+		break;
+		if(c1==0)
+		c1=='0';
+		if(c2==0)
+		c2=='0';
+		int k=c1 - '0' + c2 - '0' + carry;
+		if( k>=10)
+		{
+			tmp.buf[i]=k-10;
+			carry=1;
+		}
+		else
+		{
+			tmp.buf[i] = k ;
+			carry = 0 ;
+		}
+		return tmp;
+	}
+		

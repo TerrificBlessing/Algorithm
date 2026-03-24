@@ -1,0 +1,29 @@
+# include<iostream>
+using namespace std;
+char a[101][101];
+int N,M;
+int main()
+{
+	int k=0;
+	cin>>N>>M;
+	for(int i=1;i<=N;i++)
+	for(int j=1;j<=M;j++)
+	cin>>a[i][j];
+	void dfs(int x,int y);
+	for(int i=1;i<=N;i++)
+	for(int j=1;j<=M;j++)
+	if(a[i][j]=='W') {
+	dfs(i,j);
+	k++;}
+	cout<<k;
+	
+}
+void dfs(int x,int y)
+{
+	a[x][y]='.';
+	for(int dx=-1;dx<=1;dx++)
+	for(int dy=-1;dy<=1;dy++)
+	{
+		if(x+dx>=1&&y+dy>=1&&x+dx<=N&&y+dy<=M&&a[x+dx][y+dy]=='W') dfs(x+dx,y+dy);
+	}
+}
